@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#150F22" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Pulse — Daily Routine</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== TOP BAR ===== -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <p class="eyebrow" id="greeting">Good morning</p>
+        <h1 class="brand">Pulse</h1>
+      </div>
+      <div class="date-chip">
+        <span id="dateDay">--</span>
+        <span id="dateMonth">---</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== VIEWS ===== -->
+  <main class="views" id="views">
+
+    <!-- HOME -->
+    <section class="view active" id="view-home" data-view="home">
+
+      <div class="ring-card glass">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 160 160" class="ring-svg">
+            <circle class="ring-track" cx="80" cy="80" r="70"></circle>
+            <circle class="ring-progress" id="ringProgress" cx="80" cy="80" r="70"></circle>
+          </svg>
+          <div class="ring-center">
+            <span class="ring-pct" id="ringPct">0%</span>
+            <span class="ring-label">today's flow</span>
+          </div>
+        </div>
+        <p class="ring-quote" id="dailyQuote">Small steps, repeated daily, become momentum.</p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-pill glass">
+          <span class="stat-num" id="statTasks">0/0</span>
+          <span class="stat-cap">Tasks</span>
+        </div>
+        <div class="stat-pill glass">
+          <span class="stat-num" id="statHabits">0/0</span>
+          <span class="stat-cap">Habits</span>
+        </div>
+        <div class="stat-pill glass">
+          <span class="stat-num" id="statFocus">0m</span>
+          <span class="stat-cap">Focus</span>
+        </div>
+      </div>
+
+      <h2 class="section-title">Up next</h2>
+      <div id="homeAgenda" class="agenda-list">
+        <!-- populated by JS -->
+      </div>
+
+    </section>
+
+    <!-- TASKS -->
+    <section class="view" id="view-tasks" data-view="tasks">
+      <div class="view-head">
+        <h2 class="section-title">Tasks</h2>
+        <div class="filter-tabs" id="taskFilters">
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="active">Active</button>
+          <button class="chip" data-filter="done">Done</button>
+        </div>
+      </div>
+      <ul class="item-list" id="taskList"></ul>
+      <div class="empty-state" id="taskEmpty">
+        <p>Nothing here yet.</p>
+        <span>Tap + to add your first task</span>
+      </div>
+    </section>
+
+    <!-- HABITS -->
+    <section class="view" id="view-habits" data-view="habits">
+      <div class="view-head">
+        <h2 class="section-title">Habits</h2>
+        <span class="muted-note" id="habitStreakSummary"></span>
+      </div>
+      <ul class="item-list" id="habitList"></ul>
+      <div class="empty-state" id="habitEmpty">
+        <p>No habits tracked yet.</p>
+        <span>Build your routine — tap +</span>
+      </div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="view" id="view-notes" data-view="notes">
+      <div class="view-head">
+        <h2 class="section-title">Notes</h2>
+      </div>
+      <div class="note-grid" id="noteGrid"></div>
+      <div class="empty-state" id="noteEmpty">
+        <p>No notes yet.</p>
+        <span>Capture a thought — tap +</span>
+      </div>
+    </section>
+
+    <!-- FOCUS -->
+    <section class="view" id="view-focus" data-view="focus">
+      <h2 class="section-title">Focus timer</h2>
+      <div class="timer-card glass">
+        <div class="timer-modes" id="timerModes">
+          <button class="chip active" data-mins="25">Focus 25</button>
+          <button class="chip" data-mins="5">Break 5</button>
+          <button class="chip" data-mins="15">Break 15</button>
+        </div>
+        <div class="timer-ring-wrap">
+          <svg viewBox="0 0 220 220" class="ring-svg timer-svg">
+            <circle class="ring-track" cx="110" cy="110" r="96"></circle>
+            <circle class="ring-progress" id="timerRingProgress" cx="110" cy="110" r="96"></circle>
+          </svg>
+          <div class="ring-center">
+            <span class="timer-time" id="timerDisplay">25:00</span>
+            <span class="ring-label" id="timerState">ready</span>
+          </div>
+        </div>
+        <div class="timer-controls">
+          <button class="btn-ghost" id="timerReset">Reset</button>
+          <button class="btn-primary" id="timerToggle">Start</button>
+        </div>
+        <p class="muted-note center" id="timerSessions">0 sessions completed today</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FAB ===== -->
+  <button class="fab" id="fab" aria-label="Add">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+  </button>
+
+  <!-- ===== BOTTOM NAV ===== -->
+  <nav class="bottomnav">
+    <button class="nav-btn active" data-view="home">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 11.5 12 4l9 7.5M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-btn" data-view="tasks">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="m8.5 12 2.3 2.3L16 9.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Tasks</span>
+    </button>
+    <button class="nav-btn" data-view="habits">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-9.7-9.3C.8 8 2.3 4.6 5.6 3.8c2-.5 3.8.4 4.9 2 1.1-1.6 2.9-2.5 4.9-2 3.3.8 4.8 4.2 3.3 7.9C16.5 16.4 12 21 12 21z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      <span>Habits</span>
+    </button>
+    <button class="nav-btn" data-view="notes">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="0" fill="none"/><path d="M6 4h9l5 5v11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 4v5h5M8 13h8M8 17h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>Notes</span>
+    </button>
+    <button class="nav-btn" data-view="focus">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="13" r="8" stroke="currentColor" stroke-width="1.8"/><path d="M12 9v4l3 2M9 2h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>Focus</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- ===== SHEET (add task / habit / note) ===== -->
+<div class="sheet-backdrop" id="sheetBackdrop">
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+
+    <div class="sheet-body" id="sheetTaskBody">
+      <h3 class="sheet-title">New task</h3>
+      <input type="text" id="taskInput" class="field" placeholder="What needs to be done?" maxlength="80" />
+      <div class="priority-row">
+        <button class="chip pri low active" data-pri="low">Low</button>
+        <button class="chip pri med" data-pri="med">Medium</button>
+        <button class="chip pri high" data-pri="high">High</button>
+      </div>
+      <button class="btn-primary full" id="taskSave">Add task</button>
+    </div>
+
+    <div class="sheet-body hidden" id="sheetHabitBody">
+      <h3 class="sheet-title">New habit</h3>
+      <input type="text" id="habitInput" class="field" placeholder="e.g. Drink water, Read 10 pages" maxlength="60" />
+      <button class="btn-primary full" id="habitSave">Add habit</button>
+    </div>
+
+    <div class="sheet-body hidden" id="sheetNoteBody">
+      <h3 class="sheet-title">New note</h3>
+      <input type="text" id="noteTitleInput" class="field" placeholder="Title" maxlength="60" />
+      <textarea id="noteBodyInput" class="field area" placeholder="Write something..." maxlength="600"></textarea>
+      <button class="btn-primary full" id="noteSave">Save note</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
